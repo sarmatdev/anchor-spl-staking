@@ -1,16 +1,37 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { AnchorSplStaking } from "../target/types/anchor_spl_staking";
+import { createMints } from "../scripts/create-mints";
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { findStakeMintAuthorityPDA, stakeMintAddress } from "../scripts/config";
+import { User } from "./user";
+import { expect } from "chai";
+
+anchor.setProvider(anchor.AnchorProvider.env());
+const program = anchor.workspace.AnchorSplStaking as Program<AnchorSplStaking>;
 
 describe("anchor-spl-staking", () => {
-  // Configure the client to use the local cluster.
-  anchor.setProvider(anchor.AnchorProvider.env());
+  before(async () => {
+    await createMints();
+  });
 
-  const program = anchor.workspace.AnchorSplStaking as Program<AnchorSplStaking>;
+  it("It swaps original token for stake token", async () => {
+    const user = new User();
+    await user.getOrCreateStakeTokenBag();
 
-  it("Is initialized!", async () => {
-    // Add your test here.
-    const tx = await program.methods.initialize().rpc();
-    console.log("Your transaction signature", tx);
+    const userStakes = await user.stakeBalance();
+    const [stakePDA, stakePDABump] = await findStakeMintAuthorityPDA();
+
+    await program.methods
+      .stake(stakePDABump, new anchor.BN(5000))
+      .accounts({
+        tokenProgram: TOKEN_PROGRAM_ID,
+        stakeMint: stakeMintAddress,
+        stakeMintAuthority: stakePDA,
+        userStakeTokenBag: user.stakeTokenBag,
+      })
+      .rpc();
+
+    expect(await user.stakeBalance()).to.be.eql(userStakes + 5_000);
   });
 });
