@@ -23,7 +23,7 @@ class TokenHelper {
     );
   };
 
-  getOrCreateTokenBag = async (
+  getOrCreateTokenAccount = async (
     owner: PublicKey,
     isPDA: boolean = false
   ): Promise<Account> => {

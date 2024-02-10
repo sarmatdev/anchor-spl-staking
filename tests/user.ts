@@ -9,7 +9,7 @@ import { Wallet } from "@coral-xyz/anchor";
 
 class User {
   originalToken: TokenHelper;
-  originalTokenBag: PublicKey;
+  originalTokenAccount: PublicKey;
   stakeToken: TokenHelper;
   stakeTokenBag: PublicKey;
   wallet: Wallet;
@@ -20,20 +20,20 @@ class User {
     this.wallet = wallet;
   }
 
-  getOrCreateOriginalTokenBag = async () => {
-    this.originalTokenBag = (
-      await this.originalToken.getOrCreateTokenBag(this.wallet.publicKey)
+  getOrCreateOriginalTokenAccount = async () => {
+    this.originalTokenAccount = (
+      await this.originalToken.getOrCreateTokenAccount(this.wallet.publicKey)
     ).address;
   };
 
-  getOrCreateStakeTokenBag = async () => {
+  getOrCreateStakeTokenAccount = async () => {
     this.stakeTokenBag = (
-      await this.stakeToken.getOrCreateTokenBag(this.wallet.publicKey)
+      await this.stakeToken.getOrCreateTokenAccount(this.wallet.publicKey)
     ).address;
   };
 
   originalBalance = async () => {
-    return await this.originalToken.balance(this.originalTokenBag);
+    return await this.originalToken.balance(this.originalTokenAccount);
   };
 
   stakeBalance = async () => {
