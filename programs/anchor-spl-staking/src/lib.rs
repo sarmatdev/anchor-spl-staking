@@ -19,11 +19,26 @@ pub mod anchor_spl_staking {
   ) -> Result<()> {
     create_original_token_account_handler(ctx)
   }
+
   pub fn stake(
     ctx: Context<Stake>,
     stake_mint_authority_bump: u8,
+    program_original_token_account_bump: u8,
     token_amount: u64,
   ) -> Result<()> {
-    stake_handler(ctx, stake_mint_authority_bump, token_amount)
+    stake_handler(
+      ctx,
+      stake_mint_authority_bump,
+      program_original_token_account_bump,
+      token_amount,
+    )
+  }
+
+  pub fn unstake(
+    ctx: Context<Unstake>,
+    stake_mint_authority_bump: u8,
+    token_amount: u64,
+  ) -> Result<()> {
+    unstake_handler(ctx, stake_mint_authority_bump, token_amount)
   }
 }

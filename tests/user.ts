@@ -11,7 +11,7 @@ class User {
   originalToken: TokenHelper;
   originalTokenAccount: PublicKey;
   stakeToken: TokenHelper;
-  stakeTokenBag: PublicKey;
+  stakeTokenAccount: PublicKey;
   wallet: Wallet;
 
   constructor(wallet = userWallet) {
@@ -27,7 +27,7 @@ class User {
   };
 
   getOrCreateStakeTokenAccount = async () => {
-    this.stakeTokenBag = (
+    this.stakeTokenAccount = (
       await this.stakeToken.getOrCreateTokenAccount(this.wallet.publicKey)
     ).address;
   };
@@ -37,7 +37,7 @@ class User {
   };
 
   stakeBalance = async () => {
-    return await this.originalToken.balance(this.stakeTokenBag);
+    return await this.originalToken.balance(this.stakeTokenAccount);
   };
 }
 

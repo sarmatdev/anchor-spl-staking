@@ -6,6 +6,7 @@ use crate::{ORIGINAL_MINT_ADDRESS, STAKE_MINT_ADDRESS};
 pub fn stake_handler(
   ctx: Context<Stake>,
   stake_mint_authority_bump: u8,
+  _program_original_token_account_bump: u8,
   token_amount: u64,
 ) -> Result<()> {
   let stake_amount = token_amount;
